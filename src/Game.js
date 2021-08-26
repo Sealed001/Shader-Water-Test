@@ -9,7 +9,7 @@
 simple Game declaration
 **/
 import DE from '@dreamirl/dreamengine';
-import { WaterFilter } from "./filters/Water";
+import WaterFilter from "./filters/WaterFilter";
 
 var Game = {};
 

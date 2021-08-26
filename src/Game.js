@@ -9,6 +9,8 @@
 simple Game declaration
 **/
 import DE from '@dreamirl/dreamengine';
+import { WaterFilter } from "./filters/Water";
+
 var Game = {};
 
 Game.render = null;
@@ -42,19 +44,13 @@ Game.onload = function() {
   // scene
   Game.scene = new DE.Scene();
 
-  // don't do this because DisplayObject bounds is not set to the render size but to the objects inside the scene
-  // scene.interactive = true;
-  // scene.click = function()
-  // {
-  //   console.log( "clicked", arguments );
-  // }
-
-  // if no Camera, we add the Scene to the render (this can change if I make Camera)
-
   Game.camera = new DE.Camera(0, 0, 1920, 1080, {
     scene: Game.scene,
     backgroundImage: 'bg',
   });
+  Game.camera.filters = [
+    new WaterFilter()
+  ];
   Game.camera.interactive = true;
   Game.camera.pointermove = function(pos, e) {
     Game.targetPointer.moveTo(pos, 100);
@@ -115,6 +111,9 @@ Game.onload = function() {
         rotation: Math.PI,
       }),
     ],
+    /*filters: [
+      new WaterFilter()
+    ],*/
     axes: { x: 0, y: 0 },
     interactive: true,
     click: function() {
@@ -319,7 +318,7 @@ Game.onload = function() {
         fill: true,
         x: -20,
         y: -35,
-      }),
+      })
     });
     c.scroller = scroller;
     c.addAutomatism('scroller', 'scroller');

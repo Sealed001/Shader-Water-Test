@@ -34,6 +34,9 @@ class WaterFilter extends Filter {
         this.uniforms.waterSurfaceRayColor = new Float32Array(4);
         this.uniforms.waterColor = new Float32Array(4);
 
+        // Camera
+        this.uniforms.cameraCoord = new Float32Array(2);
+
         // Pixelization
         this.uniforms.pixelSize = new Float32Array(2);
 
@@ -158,6 +161,14 @@ class WaterFilter extends Filter {
     set pixelSize(value) {
         this.uniforms.pixelSize[0] = Math.abs(value);
         this.uniforms.pixelSize[1] = Math.abs(value);
+    }
+
+    get cameraCoord() {
+        return [...this.uniforms.cameraCoord];
+    }
+    set cameraCoord(value) {
+        this.uniforms.pixelSize[0] = value[0];
+        this.uniforms.pixelSize[1] = value[1];
     }
 }
 

@@ -1,6 +1,6 @@
 // Basic
 varying vec2 vTextureCoord;
-//uniform vec4 filterArea;
+uniform vec4 filterArea;
 uniform sampler2D uSampler;
 
 // Animation
@@ -28,14 +28,10 @@ uniform vec4 waterColor;
 // Pixelization
 uniform vec2 pixelSize;
 
-vec4 filterArea = vec4(1920, 1080, 0, 0);
+// Camera
+uniform vec2 cameraCoord;
 
 // Utils
-
-vec2 getTextureCoord(vec2 coordinates) {
-    return (coordinates - filterArea.zw) / filterArea.xy;
-}
-
 vec4 mixColors(vec4 color1, vec4 color2) {
     return vec4(mix(color1.rgb, color2.rgb, color1.a * color2.a), color1.a);
 }
@@ -52,7 +48,7 @@ void main(void) {
 
     vec4 textureColor = texture2D(uSampler, vTextureCoord);
 
-    vec2 pixelCoordinates = vTextureCoord * filterArea.xy + filterArea.zw;
+    vec2 pixelCoordinates = vTextureCoord * filterArea.xy + cameraCoord;
     vec2 bigPixelCoordinates = floor(pixelCoordinates / pixelSize) * pixelSize;
 
     if ((!waterSurface && !water) || pixelCoordinates.y < waterLevel) {
@@ -61,7 +57,7 @@ void main(void) {
     }
 
     if (waterSurface && !(waterSurfaceLengthLimit && pixelCoordinates.y > (waterLevel + waterSurfaceLength))) {
-        vec2 textureReflectionCoordinates = (vec2(bigPixelCoordinates.x, 2.0 * waterLevel - bigPixelCoordinates.y) - filterArea.zw) / filterArea.xy;
+        vec2 textureReflectionCoordinates = (vec2(bigPixelCoordinates.x, 2.0 * waterLevel - bigPixelCoordinates.y) - cameraCoord) / filterArea.xy;
         vec4 reflectionColor = texture2D(uSampler, textureReflectionCoordinates);
 
         vec4 color = mixColors(textureColor, waterSurfaceColor);

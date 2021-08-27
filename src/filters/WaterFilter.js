@@ -5,16 +5,18 @@ import fragment from './WaterFilter.frag';
 var defaultsOptions = {
     animated: true,
     animationSpeed: 1,
-    waterLevel: 1080-200,
+    waterLevel: 1080 - 200,
     waterSurface: true,
-    waterSurfaceLengthLimit: false,
+    waterSurfaceLengthLimit: true,
     waterSurfaceLength: 80,
     waterSurfaceColor: [0.149, 0.839, 0.792, 0.2],
+    waterSurfaceRayColor: [0.588, 0.619, 0.615, 0.5],
     waterSurfaceReflectivity: 0.3,
-    water: true,
+    water: false,
     waterLengthLimit: false,
     waterLength: 80,
-    waterColor: [0.05, 0.349, 0.666, 0.2]
+    waterColor: [0.05, 0.349, 0.666, 0.2],
+    pixelSize: 5,
 };
 
 /**
@@ -29,7 +31,11 @@ class WaterFilter extends Filter {
 
         // Colors
         this.uniforms.waterSurfaceColor = new Float32Array(4);
+        this.uniforms.waterSurfaceRayColor = new Float32Array(4);
         this.uniforms.waterColor = new Float32Array(4);
+
+        // Pixelization
+        this.uniforms.pixelSize = new Float32Array(2);
 
         // Animation
         this.time = 0;
@@ -100,6 +106,15 @@ class WaterFilter extends Filter {
         }
     }
 
+    get waterSurfaceRayColor() {
+        return [...this.uniforms.waterSurfaceRayColor];
+    }
+    set waterSurfaceRayColor(value) {
+        for (let i = 0; i < 4; i++) {
+            this.uniforms.waterSurfaceRayColor[i] = Math.min(Math.max(value[i], 0), 1);
+        }
+    }
+
     get waterSurfaceReflectivity() {
         return this.uniforms.waterSurfaceReflectivity;
     }
@@ -135,6 +150,14 @@ class WaterFilter extends Filter {
         for (let i = 0; i < 4; i++) {
             this.uniforms.waterColor[i] = Math.min(Math.max(value[i], 0), 1);
         }
+    }
+
+    get pixelSize() {
+        return this.uniforms.pixelSize[0];
+    }
+    set pixelSize(value) {
+        this.uniforms.pixelSize[0] = Math.abs(value);
+        this.uniforms.pixelSize[1] = Math.abs(value);
     }
 }
 
